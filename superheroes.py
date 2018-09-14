@@ -41,26 +41,26 @@ class Team:
     def __init__(self, team_name):
         """Init resourses."""
         self.name = team_name
-        self.heros = list()
+        self.heroes = list()
 
     def add_hero(self, Hero):
-        self.heros.append(Hero)
+        self.heroes.append(Hero)
 
     def remove_hero(self, name):
         hero_removed = False
-        for i in range(len(self.heros)):
-            if heros[x].name==name:
-                heros.pop(x)
+        for i in range(len(self.heroes)):
+            if heroes[x].name==name:
+                heroes.pop(x)
                 hero_removed=True
             if(not hero_removed):
                 return 0
     def find_hero(self, name):
-        for i in range(len(self.heros)):
-            if self.heros[i].name==name:
-                return self.heros[i]
+        for i in range(len(self.heroes)):
+            if self.heroes[i].name==name:
+                return self.heroes[i]
 
-    def view_all_heros(self):
-        for hero in self.heros:
+    def view_all_heroes(self):
+        for hero in self.heroes:
             hero.display();
 
 
@@ -84,6 +84,6 @@ if __name__=="__main__":
     print(hero.attack())
     team = Team("avengers")
     team.add_hero(hero)
-    team.view_all_heros()
+    team.view_all_heroes()
     print(team.find_hero("Wonder Woman"))
     print(team.find_hero("apples"))
