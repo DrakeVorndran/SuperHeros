@@ -49,15 +49,16 @@ class Team:
     def remove_hero(self, name):
         hero_removed = False
         for i in range(len(self.heroes)):
-            if heroes[x].name==name:
-                heroes.pop(x)
+            if self.heroes[i].name==name:
+                self.heroes.pop(i)
                 hero_removed=True
-            if(not hero_removed):
-                return 0
+        if(not hero_removed):
+            return 0
     def find_hero(self, name):
         for i in range(len(self.heroes)):
             if self.heroes[i].name==name:
                 return self.heroes[i]
+        return 0
 
     def view_all_heroes(self):
         for hero in self.heroes:
@@ -86,4 +87,4 @@ if __name__=="__main__":
     team.add_hero(hero)
     team.view_all_heroes()
     print(team.find_hero("Wonder Woman"))
-    print(team.find_hero("apples"))
+    print(team.remove_hero("apples"))
