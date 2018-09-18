@@ -129,9 +129,10 @@ class Team:
     def attack(self, other_team):
         attack_total = 0
         for hero in self.heroes:
+            print(hero.name)
             attack_total+=hero.attack()
         kills = other_team.defend(attack_total)
-        self.teamkills+=kills
+        self.team_kills+=kills
         for hero in self.heroes:
             hero.add_kill(kills)
 
@@ -313,9 +314,10 @@ def create_hero():
     print("what armor does your hero have: ")
     ui = None
     while(ui!="stop"):
-        hero.add_ability(create_armor())
+        hero.add_armor(create_armor())
         ui = unbreakable_input("keep going: ")
     print("Hero complete")
+    return hero
 
 
 def create_ability():
