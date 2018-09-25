@@ -17,11 +17,11 @@ class Hero:
         self.kills = 0
 
     def defend(self):
-        defence = 0
+        defense = 0
         if(self.health>0):
             for item in self.armors:
-                defence += item.defend()
-        return defence
+                defense += item.defend()
+        return defense
         """
         This method should run the defend method on each piece of armor and calculate the total defense.
 
@@ -63,12 +63,10 @@ class Hero:
 
     def display(self):
         print("HERO: "+self.name)
-        ability_names = []
-        for ability in self.abilities:
-            ability_names.append(ability.name)
-        print("Abilities - "+", ".join(ability_names))
-        print("kills: "+str(self.kills))
-        print("deaths: "+str(self.deaths))
+        print("Health: "+str(self.health))
+        if(self.deaths>0):
+            print("Kill/Death: "+str(self.kills/self.deaths))
+        print("____________")
         # print("K/D ratio: "+str(self.kills/self.deaths))
 
 
@@ -104,9 +102,11 @@ class Team:
         self.name = team_name
         self.heroes = list()
         self.team_kills = 0
+        self.total_health = 0
 
     def add_hero(self, Hero):
         self.heroes.append(Hero)
+        self.total_health += self.heroes[-1].health
 
     def remove_hero(self, name):
         hero_removed = False
@@ -125,6 +125,7 @@ class Team:
     def view_all_heroes(self):
         for hero in self.heroes:
             hero.display();
+        print("____________________________________")
 
     def attack(self, other_team):
         attack_total = 0
@@ -143,11 +144,12 @@ class Team:
         """
 
     def defend(self, damage_amt):
-        defence = 0
+        defense = 0
         for hero in self.heroes:
-            defence+=hero.defend()
-        if(damage_amt > defence):
-            return self.deal_damage(damage_amt-defence)
+            defense+=hero.defend()
+        if(damage_amt > defense):
+            self.total_health-=(damage_amt-defense)
+            return self.deal_damage(damage_amt-defense)
         return 0
         """
         This method should calculate our team's total defense.
@@ -167,8 +169,10 @@ class Team:
         """
 
     def revive_heroes(self, health=100):
+        self.total_health = 0
         for hero in self.heroes:
             hero.health = hero.start_health
+            self.total_health+=hero.health
         """
         This method should reset all heroes health to their
         original starting value.
@@ -178,6 +182,7 @@ class Team:
         print(self.name)
         for hero in self.heroes:
             hero.display()
+        print("____________________________________")
         """
         This method should print the ratio of kills/deaths for each member of the team to the screen.
 
@@ -233,7 +238,7 @@ class Arena:
 
 
     def build_team_one(self):
-        self.team_one =  Team(unbreakable_input("what do you want your team to be named"))
+        self.team_one =  Team(unbreakable_input("what do you want your team to be named: "))
         print("time to create heroes, each team has "+str(self.team_size)+" heroes")
         for i in range(self.team_size):
             print("hero number {}. ".format(i))
@@ -244,7 +249,7 @@ class Arena:
         """
 
     def build_team_two(self):
-        self.team_two =  Team(unbreakable_input("what do you want your team to be named"))
+        self.team_two =  Team(unbreakable_input("what do you want your team to be named: "))
         print("time to create heroes, each team has "+str(self.team_size)+" heroes")
         for i in range(self.team_size):
             print("hero number {}. ".format(i))
@@ -254,10 +259,14 @@ class Arena:
         """
 
     def team_battle(self):
-        while(self.team_one.team_kills<self.team_size and self.team_two.team_kills<self.team_size):
+        print("hi")
+        while(self.team_one.total_health>0 and self.team_two.total_health>0):
             self.team_one.attack(self.team_two)
             self.team_two.attack(self.team_one)
             self.show_stats()
+        if(self.team_one.heroes[0].deaths==1):
+            return self.team_one.name
+        return self.team_two.name
         """
         This method should continue to battle teams until
         one or both teams are dead.
@@ -293,12 +302,12 @@ def unbreakable_input(in_string,type="string"):
             except ValueError:
                 print("NAN")
         else:
-            if(len(ui)>0 and len(ui)<10):
+            if(len(ui)>0 and len(ui)<30):
                 return ui
 
 
 def create_hero():
-    hero =  Hero(unbreakable_input("What is your heros name: "))
+    hero =  Hero(unbreakable_input("What is your heroes name: "))
     print("what abilities does your hero have: ")
     ui = None
     while(ui!="stop"):
@@ -336,7 +345,16 @@ def create_armor():
 
 
 if __name__=="__main__":
-    battle_zone =  Arena(unbreakable_input("how large is your team","int"))
+    battle_zone =  Arena(unbreakable_input("how large is your team: ","int"))
+    running = True
     battle_zone.build_team_one()
     battle_zone.build_team_two()
-    battle_zone.team_battle()
+    while(running):
+        print(battle_zone.team_battle())
+        ui = unbreakable_input("do you want to play again(yes/no): ")
+        if(ui == "no"):
+            running = False
+        else:
+            battle_zone.team_one.revive_heroes()
+            print(battle_zone.team_one.heroes[0].health)
+            battle_zone.team_two.revive_heroes()
